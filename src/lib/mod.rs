@@ -1,4 +1,6 @@
+mod action;
 mod app;
+mod controller;
 mod menu;
 
 pub use app::*;

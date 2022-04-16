@@ -44,4 +44,18 @@ mod tests {
             Ok(())
         }
     }
+
+    mod handle_key {
+        /* How do i test this
+        use crate::lib::App;
+
+        #[test]
+        fn should_set_close_on_esc() -> Result<(), std::io::Error> {
+            let mut app = App::default();
+            app.handle_key(crossterm::event::KeyEvent::new());
+
+            defer app.close()
+        }
+        */
+    }
 }

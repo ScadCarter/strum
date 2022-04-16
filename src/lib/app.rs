@@ -1,3 +1,4 @@
+use super::controller;
 use super::menu;
 use tui::{backend::CrosstermBackend, Terminal};
 
@@ -55,11 +56,29 @@ impl App {
         self.current_tab = self.current_tab.next();
     }
 
+    fn render(&self) {
+        todo!("make render work")
+    }
+
     pub fn run(&mut self) -> Result<(), std::io::Error> {
+        use super::action::Action::*;
+
         loop {
-            self.next_tab();
-            self.terminal.draw(|_rect| {})?;
-            break;
+            // self.render();
+
+            let action = match crossterm::event::read()? {
+                crossterm::event::Event::Key(event) => controller::get_action_from_key(event),
+                crossterm::event::Event::Mouse(_) => Noop,
+                crossterm::event::Event::Resize(width, height) => {
+                    println!("New size {}x{}", width, height);
+                    Noop
+                }
+            };
+
+            match action {
+                Close => break,
+                Noop => {}
+            }
         }
 
         Ok(())
