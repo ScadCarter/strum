@@ -4,7 +4,9 @@ mod tests {
 
     #[test]
     fn main_should_not_panic() {
-        main();
-        assert!(true);
+        match main() {
+            Err(e) => panic!("{:?}", e),
+            _ => {}
+        }
     }
 }

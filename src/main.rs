@@ -3,10 +3,10 @@ mod lib;
 #[cfg(test)]
 mod main_test;
 
-fn main() {
-    // &std::env::args().collect()
-    match lib::App::default() {
-        Err(e) => panic!("{:?}", e),
-        _ => {}
-    };
+fn main() -> Result<(), std::io::Error> {
+    let mut app = lib::App::default()?;
+
+    app.run()?;
+
+    app.exit()
 }
