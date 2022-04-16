@@ -1,10 +1,8 @@
 mod lib;
 
 fn main() {
-    match lib::strum() {
-        Some(num) => println!("num: {}", num),
-        None => panic!("lib::strum returned unexpected None value"),
-    };
+    // &std::env::args().collect()
+    lib::App::default();
 }
 
 #[test]
