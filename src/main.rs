@@ -2,11 +2,8 @@ mod lib;
 
 fn main() {
     // &std::env::args().collect()
-    lib::App::default();
-}
-
-#[test]
-fn main_should_not_panic() {
-    main();
-    assert!(true);
+    match lib::App::default() {
+        Err(e) => panic!("{:?}", e),
+        _ => {}
+    };
 }

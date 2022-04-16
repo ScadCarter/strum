@@ -1,12 +1,3 @@
-pub struct App {}
+mod app;
 
-impl App {
-    pub fn default() -> Self {
-        Self {}
-    }
-}
-
-#[test]
-fn app_should_not_panic() {
-    App::default();
-}
+pub use app::*;
