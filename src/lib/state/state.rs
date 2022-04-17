@@ -1,10 +1,14 @@
 use crate::lib::cmd;
 
-pub struct State {}
+pub struct State {
+    pub devices: Vec<Device>,
+}
 
 impl State {
-    pub fn default() -> Self {
-        Self {}
+    pub fn default() -> Result<Self, String> {
+        Ok(Self {
+            devices: Device::get_all()?,
+        })
     }
 }
 

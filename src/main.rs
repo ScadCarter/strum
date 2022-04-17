@@ -1,9 +1,9 @@
 mod lib;
 
-fn main() -> Result<(), std::io::Error> {
-    let mut app = lib::App::default()?;
+fn main() {
+    let mut app = lib::App::default().unwrap_or_else(|reason| panic!("{:?}", reason));
 
-    app.run()?;
+    app.run().unwrap_or_else(|reason| panic!("{:?}", reason));
 
-    app.exit()
+    app.exit().unwrap_or_else(|reason| panic!("{:?}", reason));
 }
