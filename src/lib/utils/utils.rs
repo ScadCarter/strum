@@ -1,10 +1,12 @@
-pub fn get_action_from_key(key: crossterm::event::KeyEvent) -> super::action::Action {
-    use super::action::Action::*;
-    use crossterm::event::KeyCode::*;
+use crate::lib::action::Action;
+use crate::lib::action::Action::*;
+use crossterm::event::KeyCode::*;
 
+pub fn get_action_from_key(key: crossterm::event::KeyEvent) -> Action {
     match key.code {
         Esc => Close,
-        v => Noop,
+        Tab => NextTab,
+        _ => Noop,
         /*
         Backspace,
         Enter,

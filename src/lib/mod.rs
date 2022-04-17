@@ -1,7 +1,7 @@
 mod action;
 mod app;
-mod controller;
-mod menu;
+mod utils;
+mod view;
 
 pub use app::*;
 

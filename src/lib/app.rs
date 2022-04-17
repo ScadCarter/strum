@@ -1,13 +1,16 @@
-use super::controller;
-use super::menu;
+use super::utils;
+use super::view;
 use tui::{backend::CrosstermBackend, Terminal};
 
 pub struct App {
     terminal: Terminal<CrosstermBackend<std::io::Stdout>>,
-    current_tab: menu::Tab,
+    current_tab: view::Tab,
 }
 
 impl App {
+    pub fn terminal(&mut self) -> &Terminal<CrosstermBackend<std::io::Stdout>> {
+        &self.terminal
+    }
     pub fn default() -> Result<Self, std::io::Error> {
         // setup terminal
         crossterm::terminal::enable_raw_mode()?;
@@ -24,17 +27,17 @@ impl App {
 
         Ok(Self {
             terminal,
-            current_tab: menu::Tab::Brightness,
+            current_tab: view::Tab::Brightness,
         })
     }
 
-    pub fn new(tab: menu::Tab) -> Result<Self, std::io::Error> {
+    pub fn new(tab: view::Tab) -> Result<Self, std::io::Error> {
         let mut app = Self::default()?;
         app.current_tab = tab;
         Ok(app)
     }
 
-    pub fn tab(&self) -> &menu::Tab {
+    pub fn tab(&self) -> &view::Tab {
         &self.current_tab
     }
 
@@ -56,18 +59,18 @@ impl App {
         self.current_tab = self.current_tab.next();
     }
 
-    fn render(&self) {
-        todo!("make render work")
+    fn render(&mut self) {
+        view::draw(self.current_tab.clone(), &mut self.terminal);
     }
 
     pub fn run(&mut self) -> Result<(), std::io::Error> {
         use super::action::Action::*;
 
         loop {
-            // self.render();
+            self.render();
 
             let action = match crossterm::event::read()? {
-                crossterm::event::Event::Key(event) => controller::get_action_from_key(event),
+                crossterm::event::Event::Key(event) => utils::get_action_from_key(event),
                 crossterm::event::Event::Mouse(_) => Noop,
                 crossterm::event::Event::Resize(width, height) => {
                     println!("New size {}x{}", width, height);
@@ -77,6 +80,7 @@ impl App {
 
             match action {
                 Close => break,
+                NextTab => self.next_tab(),
                 Noop => {}
             }
         }
