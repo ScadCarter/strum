@@ -1,6 +1,6 @@
 use tui::{
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
-    style::{Color, Modifier, Style},
+    layout::{Constraint, Direction, Layout, Rect},
+    style::{Color, Style},
     text::{Span, Spans},
     widgets::{Block, Tabs},
 };

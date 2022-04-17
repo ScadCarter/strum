@@ -2,6 +2,8 @@ use std::slice::Iter;
 
 use tui::{backend::CrosstermBackend, Terminal};
 
+use crate::lib::state;
+
 use super::views;
 
 #[derive(Debug, Clone)]
@@ -42,16 +44,18 @@ impl std::fmt::Display for Tab {
 pub fn draw(
     tab: Tab,
     term: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
+    s: &state::State,
 ) -> Result<(), std::io::Error> {
     match tab {
-        Tab::Brightness => draw_brightness(tab, term)?,
-        Tab::Bluetooth => draw_bluetooth(tab, term)?,
+        Tab::Brightness => draw_brightness(s, tab, term)?,
+        Tab::Bluetooth => draw_bluetooth(s, tab, term)?,
     }
 
     Ok(())
 }
 
 fn draw_brightness(
+    s: &state::State,
     tab: Tab,
     term: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
 ) -> Result<(), std::io::Error> {
@@ -66,14 +70,22 @@ fn draw_brightness(
 }
 
 fn draw_bluetooth(
+    s: &state::State,
     tab: Tab,
     term: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
 ) -> Result<(), std::io::Error> {
     term.draw(|f| {
-        let props = views::header::Props::new(tab, f.size());
-        let header = views::header::render(&props);
+        let size = f.size();
+
+        let header_props = views::header::Props::new(tab, size);
+        let header = views::header::render(&header_props);
 
         f.render_widget(header.widget, header.rect);
+
+        let bluetooth_props = views::bluetooth::Props::new(size);
+        let bluetooth = views::bluetooth::render(&bluetooth_props);
+
+        f.render_widget(bluetooth.widget, bluetooth.rect);
     })?;
 
     Ok(())

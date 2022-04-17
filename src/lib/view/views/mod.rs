@@ -1,3 +1,4 @@
+pub mod bluetooth;
 pub mod header;
 
 pub struct Component<W: tui::widgets::Widget> {

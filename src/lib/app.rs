@@ -1,3 +1,4 @@
+use super::state;
 use super::utils;
 use super::view;
 use tui::{backend::CrosstermBackend, Terminal};
@@ -59,15 +60,17 @@ impl App {
         self.current_tab = self.current_tab.next();
     }
 
-    fn render(&mut self) {
-        view::draw(self.current_tab.clone(), &mut self.terminal);
+    fn render(&mut self, s: &state::State) -> Result<(), std::io::Error> {
+        view::draw(self.current_tab.clone(), &mut self.terminal, s)
     }
 
     pub fn run(&mut self) -> Result<(), std::io::Error> {
         use super::action::Action::*;
 
         loop {
-            self.render();
+            let s = state::State::default();
+
+            self.render(&s)?;
 
             let action = match crossterm::event::read()? {
                 crossterm::event::Event::Key(event) => utils::get_action_from_key(event),
