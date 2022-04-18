@@ -8,11 +8,11 @@ use crate::lib::state::State;
 
 pub struct Props {
     pub size: Rect,
-    pub state: Box<State>,
+    pub state: State,
 }
 
 impl Props {
-    pub fn new(size: Rect, state: Box<State>) -> Self {
+    pub fn new(size: Rect, state: State) -> Self {
         Self { size, state }
     }
 }

@@ -2,13 +2,33 @@ use crate::lib::cmd;
 
 pub struct State {
     pub devices: Vec<Device>,
+    pub cursor: usize,
 }
 
 impl State {
     pub fn default() -> Result<Self, String> {
         Ok(Self {
             devices: Device::get_all()?,
+            cursor: 0,
         })
+    }
+
+    pub fn update(&mut self) -> Result<(), String> {
+        self.devices = Device::get_all()?;
+
+        Ok(())
+    }
+
+    pub fn cursor_up(&mut self) {
+        if self.cursor != 0 {
+            self.cursor -= 1;
+        }
+    }
+
+    pub fn cursor_down(&mut self) {
+        if self.cursor != 0 {
+            self.cursor += 1;
+        }
     }
 }
 

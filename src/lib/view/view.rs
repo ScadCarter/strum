@@ -44,7 +44,7 @@ impl std::fmt::Display for Tab {
 pub fn draw(
     tab: Tab,
     term: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
-    s: Box<state::State>,
+    s: &Box<state::State>,
 ) -> Result<(), std::io::Error> {
     match tab {
         Tab::Brightness => draw_brightness(s, tab, term)?,
@@ -55,7 +55,7 @@ pub fn draw(
 }
 
 fn draw_brightness(
-    s: Box<state::State>,
+    s: &Box<state::State>,
     tab: Tab,
     term: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
 ) -> Result<(), std::io::Error> {
@@ -70,7 +70,7 @@ fn draw_brightness(
 }
 
 fn draw_bluetooth(
-    s: Box<state::State>,
+    s: &Box<state::State>,
     tab: Tab,
     term: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
 ) -> Result<(), std::io::Error> {
@@ -82,7 +82,7 @@ fn draw_bluetooth(
 
         f.render_widget(header.widget, header.rect);
 
-        let bluetooth_props = views::bluetooth::Props::new(size, s);
+        let bluetooth_props = views::bluetooth::Props::new(size, s.as_ref(););
         let bluetooth = views::bluetooth::render(&bluetooth_props);
 
         f.render_widget(bluetooth.widget, bluetooth.rect);

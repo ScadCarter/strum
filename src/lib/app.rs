@@ -66,38 +66,45 @@ impl App {
         self.current_tab = self.current_tab.next();
     }
 
-    fn render(&mut self, s: Box<state::State>) -> Result<(), std::io::Error> {
+    fn render(&mut self, s: &Box<state::State>) -> Result<(), std::io::Error> {
         view::draw(self.current_tab.clone(), &mut self.terminal, s)
     }
 
     pub fn run(&mut self) -> Result<(), AppFailure> {
         use super::action::Action::*;
 
-        loop {
-            let s = Box::new(
+        {
+            let mut app_state = Box::new(
                 state::State::default().or_else(|reason| Err(AppFailure::StateFailure(reason)))?,
             );
 
-            self.render(s)
-                .or_else(|reason| Err(AppFailure::IoError(reason)))?;
+            loop {
+                let s = &app_state;
+                s.update();
 
-            let action = match crossterm::event::read()
-                .or_else(|reason| Err(AppFailure::IoError(reason)))?
-            {
-                crossterm::event::Event::Key(event) => utils::get_action_from_key(event),
-                crossterm::event::Event::Mouse(_) => Noop,
-                crossterm::event::Event::Resize(width, height) => {
-                    println!("New size {}x{}", width, height);
-                    Noop
+                self.render(s)
+                    .or_else(|reason| Err(AppFailure::IoError(reason)))?;
+
+                let action = match crossterm::event::read()
+                    .or_else(|reason| Err(AppFailure::IoError(reason)))?
+                {
+                    crossterm::event::Event::Key(event) => utils::get_action_from_key(event),
+                    crossterm::event::Event::Mouse(_) => Noop,
+                    crossterm::event::Event::Resize(width, height) => {
+                        println!("New size {}x{}", width, height);
+                        Noop
+                    }
+                };
+
+                match action {
+                    Close => break,
+                    NextTab => self.next_tab(),
+                    MoveUp => s.cursor_up(),
+                    MoveDown => s.cursor_down(),
+                    Noop => {}
                 }
-            };
-
-            match action {
-                Close => break,
-                NextTab => self.next_tab(),
-                Noop => {}
             }
-        }
+        };
 
         Ok(())
     }

@@ -2,6 +2,8 @@ pub enum Action {
     Close,
     NextTab,
     Noop,
+    MoveUp,
+    MoveDown,
 }
 
 #[cfg(test)]
